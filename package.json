@@ -5,7 +5,8 @@
   "description": "Ecommerce website like amazon",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js"
+    "build": "cd frontend && npm install && npm run build",
+    "start": "nodemon --watch backend --exec node --experimental-modules backend/server.js"
   },
   "repository": {
     "type": "git",
