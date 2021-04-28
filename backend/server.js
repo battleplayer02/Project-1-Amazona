@@ -18,14 +18,10 @@ app.use(express.urlencoded({ extended: true }));
 
 
 
-
-
-
-await mongoose.connect('mongodb+srv://himanshu:XAfSuZuAiEwEOyEB@cluster0.6ftkm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true,
+const uri = "mongodb+srv://himanshu:XAfSuZuAiEwEOyEB@cluster0.6ftkm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const client = mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true },err => {
 });
+
 app.use('/api/uploads', uploadRouter);
 app.use('/api/users', userRouter);
 app.use('/api/products', productRouter);
@@ -126,6 +122,9 @@ io.on('connection', (socket) => {
 
 // User.updateMany({password:bcrypt.hashSync("123456")},(res,err)=>console.log(err))
 
+app.get('/', (req, res) => {
+  res.send("ok");
+});
 
 httpServer.listen(port, () => {
   console.log(`Serve at http://localhost:${port}`);
