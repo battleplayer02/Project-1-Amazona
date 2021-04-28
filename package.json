@@ -3,10 +3,10 @@
   "type": "module",
   "version": "1.0.0",
   "description": "Ecommerce website like amazon",
-  "main": "backend/server.js",
+  "main": "index.js",
   "scripts": {
-    "serve": "node backend/server.js",
-    "start": "node backend/server.js"
+    "serve": "node index",
+    "start": "node index"
   },
   "repository": {
     "type": "git",
