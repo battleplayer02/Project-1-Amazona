@@ -1,12 +1,11 @@
 # Amazona ECommerce Website
 
-# React & Node Tutorial - Full ECommerce in 9 Hours [2021]
-
-Welcome to my React and Node tutorial to build a fully-functional e-commerce website exactly like amazon. Open your code editor and follow me for the next hours to build an e-commerce website using MERN stack (MongoDB, ExpressJS, React and Node.JS).
+# React & Node Tutorial
 
 ## Demo Website
+![image](https://user-images.githubusercontent.com/42701850/116676659-de1c1a80-a9c4-11eb-852f-57eb131d3bce.png)
 
-- 👉 Heroku : []()
+- 👉 Heroku : [https://amazona-himanshu.herokuapp.com/](https://amazona-himanshu.herokuapp.com/)
 
 ## Tech Stack
 
