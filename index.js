@@ -8,8 +8,6 @@ import productRouter from './routers/productRouter.js';
 import userRouter from './routers/userRouter.js';
 import orderRouter from './routers/orderRouter.js';
 import uploadRouter from './routers/uploadRouter.js';
-import User from './models/userModel.js';
-import bcrypt from 'bcryptjs';
 dotenv.config();
 
 const app = express();
