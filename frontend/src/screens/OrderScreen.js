@@ -64,6 +64,7 @@ export default function OrderScreen(props) {
 
   function payViaPaytm() {
     alert(1)
+    console.log(window.Paytm);
     onScriptLoad()
   }
 
