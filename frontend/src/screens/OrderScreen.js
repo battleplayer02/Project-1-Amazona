@@ -50,6 +50,7 @@ export default function OrderScreen(props) {
         window.Paytm.CheckoutJS.init(config).then(function onSuccess() {
           // after successfully updating configuration, invoke JS Checkout
           window.Paytm.CheckoutJS.invoke();
+          successPaymentHandler()
         }).catch(function onError(error) {
           console.log("error => ", error);
         });
@@ -62,6 +63,7 @@ export default function OrderScreen(props) {
 
 
   function payViaPaytm() {
+    alert(1)
     onScriptLoad()
   }
 
@@ -216,7 +218,7 @@ export default function OrderScreen(props) {
                         )}
                         {loadingPay && <LoadingBox />}
 
-                        <button amount={order.totalPrice} onSuccess={successPaymentHandler} onClick={payViaPaytm}>
+                        <button onClick={payViaPaytm}>
                           Pay Via Paytm
                         </button>
                       </>
