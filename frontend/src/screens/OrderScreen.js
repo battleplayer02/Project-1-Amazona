@@ -1,8 +1,9 @@
 import Axios from 'axios';
-import { PayPalButton } from 'react-paypal-button-v2';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import Paytm from 'paytm-pg-node-sdk'
+
 import { deliverOrder, detailsOrder, payOrder } from '../actions/orderActions';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
@@ -22,6 +23,48 @@ export default function OrderScreen(props) {
   const { loading: loadingDeliver, error: errorDeliver, success: successDeliver, } = orderDeliver;
   const dispatch = useDispatch();
 
+
+
+  function onScriptLoad() {
+    var config = {
+      "root": "",
+      "flow": "DEFAULT",
+      "data": {
+        "orderId": orderId,
+        "token": "lVSz1L7YYOvoSCXC", /* update token value */
+        "tokenType": "TXN_TOKEN",
+        "amount": order.totalPrice
+      },
+      "handler": {
+        "notifyMerchant": function (eventName, data) {
+          console.log("notifyMerchant handler function called");
+          console.log("eventName => ", eventName);
+          console.log("data => ", data);
+        }
+      }
+    };
+
+    if (window.Paytm && window.Paytm.CheckoutJS) {
+      window.Paytm.CheckoutJS.onLoad(function excecuteAfterCompleteLoad() {
+        // initialze configuration using init method 
+        window.Paytm.CheckoutJS.init(config).then(function onSuccess() {
+          // after successfully updating configuration, invoke JS Checkout
+          window.Paytm.CheckoutJS.invoke();
+        }).catch(function onError(error) {
+          console.log("error => ", error);
+        });
+      });
+    }
+  }
+
+
+
+
+
+  function payViaPaytm() {
+    onScriptLoad()
+  }
+
   useEffect(() => {
     const addPayPalScript = async () => {
       const { data } = await Axios.get('/api/config/paypal');
@@ -34,12 +77,7 @@ export default function OrderScreen(props) {
       };
       document.body.appendChild(script);
     };
-    if (
-      !order ||
-      successPay ||
-      successDeliver ||
-      (order && order._id !== orderId)
-    ) {
+    if (!order || successPay || successDeliver || (order && order._id !== orderId)) {
       dispatch({ type: ORDER_PAY_RESET });
       dispatch({ type: ORDER_DELIVER_RESET });
       dispatch(detailsOrder(orderId));
@@ -74,9 +112,9 @@ export default function OrderScreen(props) {
                   <p>
                     <strong>Name:</strong> {order.shippingAddress.fullName} <br />
                     <strong>Address: </strong> {order.shippingAddress.address},
-                  {order.shippingAddress.city},{' '}
+                    {order.shippingAddress.city},{' '}
                     {order.shippingAddress.postalCode},
-                  {order.shippingAddress.country}
+                    {order.shippingAddress.country}
                   </p>
                   {order.isDelivered ? (
                     <MessageBox variant="success">
@@ -170,32 +208,26 @@ export default function OrderScreen(props) {
                 {!order.isPaid && (
                   <li>
                     {!sdkReady ? (
-                      <LoadingBox></LoadingBox>
+                      <LoadingBox />
                     ) : (
                       <>
                         {errorPay && (
                           <MessageBox variant="danger">{errorPay}</MessageBox>
                         )}
-                        {loadingPay && <LoadingBox></LoadingBox>}
+                        {loadingPay && <LoadingBox />}
 
-                        <PayPalButton
-                          amount={order.totalPrice}
-                          onSuccess={successPaymentHandler}
-                        />
+                        <button amount={order.totalPrice} onSuccess={successPaymentHandler} onClick={payViaPaytm}>
+                          Pay Via Paytm
+                        </button>
                       </>
                     )}
                   </li>
                 )}
                 {userInfo.isAdmin && order.isPaid && !order.isDelivered && (
                   <li>
-                    {loadingDeliver && <LoadingBox></LoadingBox>}
-                    {errorDeliver && (
-                      <MessageBox variant="danger">{errorDeliver}</MessageBox>
-                    )}
-                    <button
-                      type="button"
-                      className="primary block"
-                      onClick={deliverHandler}>
+                    {loadingDeliver && <LoadingBox />}
+                    {errorDeliver && (<MessageBox variant="danger">{errorDeliver}</MessageBox>)}
+                    <button type="button" className="primary block" onClick={deliverHandler}>
                       Deliver Order
                     </button>
                   </li>
