@@ -22,11 +22,6 @@ export default function OrderScreen(props) {
   const orderDeliver = useSelector((state) => state.orderDeliver);
   const { loading: loadingDeliver, error: errorDeliver, success: successDeliver, } = orderDeliver;
   const dispatch = useDispatch();
-
-  async function payViaPaytm() {
-    let { data } = await Axios.get("/api/config/paytm")
-    console.log(data);
-  }
   const successPaymentHandler = (paymentResult) => {
     dispatch(payOrder(order, paymentResult));
   };
@@ -83,7 +78,11 @@ export default function OrderScreen(props) {
                       <li key={item.product}>
                         <div className="row">
                           <div>
-                            <img src={item.image} alt={item.name} className="small" />
+                            <img
+                              src={item.image}
+                              alt={item.name}
+                              className="small"
+                            ></img>
                           </div>
                           <div className="min-30">
                             <Link to={`/product/${item.product}`}>
@@ -147,7 +146,7 @@ export default function OrderScreen(props) {
                         )}
                         {loadingPay && <LoadingBox />}
 
-                        <button onClick={payViaPaytm}>
+                        <button>
                           Pay Via Paytm
                         </button>
                       </>
