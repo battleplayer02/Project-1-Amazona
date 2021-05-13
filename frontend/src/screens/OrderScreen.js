@@ -27,32 +27,32 @@ export default function OrderScreen(props) {
     console.log(data);
   }
 
-  // useEffect(() => {
-  //   const addPayPalScript = async () => {
-  //     const { data } = await Axios.get('/api/config/paypal');
-  //     const script = document.createElement('script');
-  //     script.type = 'text/javascript';
-  //     script.src = `https://www.paypal.com/sdk/js?client-id=${data}`;
-  //     script.async = true;
-  //     script.onload = () => {
-  //       setSdkReady(true);
-  //     };
-  //     document.body.appendChild(script);
-  //   };
-  //   if (!order || successPay || successDeliver || (order && order._id !== orderId)) {
-  //     dispatch({ type: ORDER_PAY_RESET });
-  //     dispatch({ type: ORDER_DELIVER_RESET });
-  //     dispatch(detailsOrder(orderId));
-  //   } else {
-  //     if (!order.isPaid) {
-  //       if (!window.paypal) {
-  //         addPayPalScript();
-  //       } else {
-  //         setSdkReady(true);
-  //       }
-  //     }
-  //   }
-  // }, [dispatch, orderId, sdkReady, successPay, successDeliver, order]);
+  useEffect(() => {
+    const addPayPalScript = async () => {
+      const { data } = await Axios.get('/api/config/paypal');
+      const script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.src = `https://www.paypal.com/sdk/js?client-id=${data}`;
+      script.async = true;
+      script.onload = () => {
+        setSdkReady(true);
+      };
+      document.body.appendChild(script);
+    };
+    if (!order || successPay || successDeliver || (order && order._id !== orderId)) {
+      dispatch({ type: ORDER_PAY_RESET });
+      dispatch({ type: ORDER_DELIVER_RESET });
+      dispatch(detailsOrder(orderId));
+    } else {
+      if (!order.isPaid) {
+        if (!window.paypal) {
+          addPayPalScript();
+        } else {
+          setSdkReady(true);
+        }
+      }
+    }
+  }, [dispatch, orderId, sdkReady, successPay, successDeliver, order]);
 
   const successPaymentHandler = (paymentResult) => {
     dispatch(payOrder(order, paymentResult));
