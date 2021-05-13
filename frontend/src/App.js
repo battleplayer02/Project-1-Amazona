@@ -17,11 +17,8 @@ function App() {
       <div className="grid-container">
         <Header
           setSidebarIsOpen={setSidebarIsOpen}
-          sidebarIsOpen={sidebarIsOpen}
-        />
-        <main>
-          <AllRouts />
-        </main>
+          sidebarIsOpen={sidebarIsOpen} />
+        <main><AllRouts /> </main>
         <Footer />
       </div>
     </BrowserRouter>

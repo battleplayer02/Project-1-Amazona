@@ -22,7 +22,7 @@ export default function OrderScreen(props) {
   const { loading: loadingDeliver, error: errorDeliver, success: successDeliver, } = orderDeliver;
   const dispatch = useDispatch();
 
-  let payViaPaytm = async () => {
+  let payViaPaytm = async (e) => {
     let data = await Axios.get("/api/config/paytm");
     console.log(data);
   }
