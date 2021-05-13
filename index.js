@@ -52,10 +52,7 @@ app.get('/api/config/paytm', (req, res) => {
   var paytmChecksum = PaytmChecksum.generateSignature(body, "lVSz1L7YYOvoSCXC");
   paytmChecksum.then(function (result) {
     console.log("generateSignature Returns: " + result);
-    res.send({
-      ...body,
-      result
-    })
+    res.send("generateSignature Returns: " + result)
   }).catch(function (error) {
     console.log(error);
   });
