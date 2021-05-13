@@ -21,9 +21,11 @@ export default function OrderScreen(props) {
   const orderDeliver = useSelector((state) => state.orderDeliver);
   const { loading: loadingDeliver, error: errorDeliver, success: successDeliver, } = orderDeliver;
   const dispatch = useDispatch();
-
+  const userDetails = useSelector((state) => state.userDetails);
   let payViaPaytm = async (e) => {
-    let data = await Axios.get("/api/config/paytm");
+    let data = await Axios.get("/api/config/paytm",
+      { amount: order.totalPrice.toFixed(2), orderid: orderId, email: userInfo.email }
+    );
     console.log(data);
   }
 
