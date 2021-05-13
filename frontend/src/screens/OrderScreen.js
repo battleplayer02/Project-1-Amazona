@@ -2,7 +2,6 @@ import Axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import Paytm from 'paytm-pg-node-sdk'
 
 import { deliverOrder, detailsOrder, payOrder } from '../actions/orderActions';
 import LoadingBox from '../components/LoadingBox';
@@ -23,77 +22,37 @@ export default function OrderScreen(props) {
   const { loading: loadingDeliver, error: errorDeliver, success: successDeliver, } = orderDeliver;
   const dispatch = useDispatch();
 
-
-
-  function onScriptLoad() {
-    var config = {
-      "root": "",
-      "flow": "DEFAULT",
-      "data": {
-        "orderId": orderId,
-        "token": "lVSz1L7YYOvoSCXC", /* update token value */
-        "tokenType": "TXN_TOKEN",
-        "amount": order.totalPrice
-      },
-      "handler": {
-        "notifyMerchant": function (eventName, data) {
-          console.log("notifyMerchant handler function called");
-          console.log("eventName => ", eventName);
-          console.log("data => ", data);
-        }
-      }
-    };
-
-    if (window.Paytm && window.Paytm.CheckoutJS) {
-      window.Paytm.CheckoutJS.onLoad(function excecuteAfterCompleteLoad() {
-        // initialze configuration using init method 
-        window.Paytm.CheckoutJS.init(config).then(function onSuccess() {
-          // after successfully updating configuration, invoke JS Checkout
-          window.Paytm.CheckoutJS.invoke();
-          successPaymentHandler()
-        }).catch(function onError(error) {
-          console.log("error => ", error);
-        });
-      });
-    }
+  let payViaPaytm = async () => {
+    let data = await Axios.get("/api/config/paytm");
+    console.log(data);
   }
 
-
-
-
-
-  function payViaPaytm() {
-    alert(1)
-    console.log(window.Paytm);
-    onScriptLoad()
-  }
-
-  useEffect(() => {
-    const addPayPalScript = async () => {
-      const { data } = await Axios.get('/api/config/paypal');
-      const script = document.createElement('script');
-      script.type = 'text/javascript';
-      script.src = `https://www.paypal.com/sdk/js?client-id=${data}`;
-      script.async = true;
-      script.onload = () => {
-        setSdkReady(true);
-      };
-      document.body.appendChild(script);
-    };
-    if (!order || successPay || successDeliver || (order && order._id !== orderId)) {
-      dispatch({ type: ORDER_PAY_RESET });
-      dispatch({ type: ORDER_DELIVER_RESET });
-      dispatch(detailsOrder(orderId));
-    } else {
-      if (!order.isPaid) {
-        if (!window.paypal) {
-          addPayPalScript();
-        } else {
-          setSdkReady(true);
-        }
-      }
-    }
-  }, [dispatch, orderId, sdkReady, successPay, successDeliver, order]);
+  // useEffect(() => {
+  //   const addPayPalScript = async () => {
+  //     const { data } = await Axios.get('/api/config/paypal');
+  //     const script = document.createElement('script');
+  //     script.type = 'text/javascript';
+  //     script.src = `https://www.paypal.com/sdk/js?client-id=${data}`;
+  //     script.async = true;
+  //     script.onload = () => {
+  //       setSdkReady(true);
+  //     };
+  //     document.body.appendChild(script);
+  //   };
+  //   if (!order || successPay || successDeliver || (order && order._id !== orderId)) {
+  //     dispatch({ type: ORDER_PAY_RESET });
+  //     dispatch({ type: ORDER_DELIVER_RESET });
+  //     dispatch(detailsOrder(orderId));
+  //   } else {
+  //     if (!order.isPaid) {
+  //       if (!window.paypal) {
+  //         addPayPalScript();
+  //       } else {
+  //         setSdkReady(true);
+  //       }
+  //     }
+  //   }
+  // }, [dispatch, orderId, sdkReady, successPay, successDeliver, order]);
 
   const successPaymentHandler = (paymentResult) => {
     dispatch(payOrder(order, paymentResult));
@@ -230,7 +189,7 @@ export default function OrderScreen(props) {
                   <li>
                     {loadingDeliver && <LoadingBox />}
                     {errorDeliver && (<MessageBox variant="danger">{errorDeliver}</MessageBox>)}
-                    <button type="button" className="primary block" onClick={deliverHandler}>
+                    <button type="button" className="block primary" onClick={deliverHandler}>
                       Deliver Order
                     </button>
                   </li>
