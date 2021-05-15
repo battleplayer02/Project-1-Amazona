@@ -5,7 +5,7 @@ let callBackRouter = express.Router();
 
 callBackRouter.post("/callback", (req, res) => {
     if (req.body.STATUS === "TXN_SUCCESS") {
-        res.redirect(`http://https://amazona-himanshu.herokuapp.com/ordersucess/${req.body.ORDERID}/${req.body.TXNID}/${req.body.TXNDATE}/${req.body.RESPMSG}`)
+        res.redirect(`https://amazona-himanshu.herokuapp.com/ordersucess/${req.body.ORDERID}/${req.body.TXNID}/${req.body.TXNDATE}/${req.body.RESPMSG}`)
     } else {
         res.send(req.body)
     }
