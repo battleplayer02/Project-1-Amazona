@@ -8,8 +8,8 @@ import productRouter from './routers/productRouter.js';
 import userRouter from './routers/userRouter.js';
 import orderRouter from './routers/orderRouter.js';
 import uploadRouter from './routers/uploadRouter.js';
-import PaytmChecksum from "./PaytmChecksum.js";
-
+import paymentRouter from "./routers/paymentRoute.js";
+import callBackRouter from "./routers/paymentCallback.js";
 
 dotenv.config();
 
@@ -18,46 +18,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-
 const uri = "mongodb+srv://himanshu:XAfSuZuAiEwEOyEB@cluster0.6ftkm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 const client = mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, err => {
 });
+
 
 app.use('/api/uploads', uploadRouter);
 app.use('/api/users', userRouter);
 app.use('/api/products', productRouter);
 app.use('/api/orders', orderRouter);
-
-
-app.get('/api/config/paytm', (req, res) => {
-
-
-  /* import checksum generation utility */
-  /* initialize JSON String */
-
-  let { amount, orderid, email } = req.body;
-
-  body = `{
-    'mid':'pmAxeE74338028590323',
-    'orderId":'${orderid},
-    'TXN_AMOUNT':'${amount}',
-    'EMAIL':'${email}'
-  }`
-
-  /**
-  * Generate checksum by parameters we have
-  * Find your Merchant Key in your Paytm Dashboard at https://dashboard.paytm.com/next/apikeys 
-  */
-
-  var paytmChecksum = PaytmChecksum.generateSignature(body, "lVSz1L7YYOvoSCXC");
-  paytmChecksum.then(function (result) {
-    console.log("generateSignature Returns: " + result);
-    res.send("generateSignature Returns: " + result)
-  }).catch(function (error) {
-    console.log(error);
-  });
-});
-
+app.use('/', paymentRouter);
+app.use('/', callBackRouter);
 
 app.get('/api/config/google', (req, res) => {
   res.send(process.env.GOOGLE_API_KEY || '');
@@ -71,10 +42,6 @@ app.get('*', (req, res) =>
   res.sendFile(path.join(__dirname, '/frontend/build/index.html'))
 );
 
-
-// app.get('/', (req, res) => {
-//   res.send('Server is ready');
-// });
 
 app.use((err, req, res, next) => {
   res.status(500).send({ message: err.message });

@@ -24,6 +24,7 @@ import PrivateRoute from './PrivateRoute';
 import AdminRoute from './AdminRoute';
 import SellerRoute from './SellerRoute';
 import CartScreen from '../screens/CartScreen';
+import OrderSucess from '../screens/OrderSucess';
 
 export default function AllRouts() {
     return (
@@ -38,7 +39,9 @@ export default function AllRouts() {
             <Route path="/payment" component={PaymentMethodScreen} />
             <Route path="/placeorder" component={PlaceOrderScreen} />
             <Route path="/order/:id" component={OrderScreen} />
+            <Route path="/ordersucess/:id/:TXNID/:TXNDATE/:RESPMSG" component={OrderSucess} />
             <Route path="/orderhistory" component={OrderHistoryScreen} />
+            {/* <Route path="/paymentcallback/callback" component={AfterPayment} /> */}
 
             <Route path="/search/name/:name?" component={SearchScreen} exact />
             <Route path="/search/category/:category" component={SearchScreen} exact />
